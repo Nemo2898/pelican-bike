@@ -15,7 +15,7 @@ export class Quality {
   frame(rawDt) {
     if (this.locked) return
     this.samples.push(rawDt)
-    this.acc += dt
+    this.acc += rawDt
     if (this.acc < 2) return
     const n = this.samples.length
     const avg = this.samples.reduce((a, b) => a + b, 0) / n

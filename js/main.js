@@ -105,17 +105,21 @@ function step(dt) {
   if (Math.random() < dt * 0.04) app.audio.gull()
 }
 function frame(now) {
-  const raw = (now - last) / 1000
-  const dt = Math.min(0.05, raw)
-  last = now
-  const st = app.state
-  if (app.started) step(dt)
-  else app.world.update(dt * 0.5)
-  app.rig.update(dt)
-  app.hud.update(st)
-  app.quality.frame(raw)
-  renderer.toneMappingExposure = app.world.exposure
-  renderer.render(app.scene, app.rig.camera)
+  try {
+    const raw = (now - last) / 1000
+    const dt = Math.min(0.05, raw)
+    last = now
+    const st = app.state
+    if (app.started) step(dt)
+    else app.world.update(dt * 0.5)
+    app.rig.update(dt)
+    app.hud.update(st)
+    app.quality.frame(raw)
+    renderer.toneMappingExposure = app.world.exposure
+    renderer.render(app.scene, app.rig.camera)
+  } catch (e) {
+    if ((window.__errors?.length || 0) < 30) window.__errors.push('frame: ' + e.message)
+  }
   requestAnimationFrame(frame)
 }
 requestAnimationFrame(frame)
